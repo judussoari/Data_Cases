@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, LabelEncoder
 
-
+# Let's define new features from the existing ones
 def new_feats(df_train,df_test):
     df_merged = pd.concat([df_train,df_test], axis=0).reset_index(drop=True)
     df_merged.drop('SalePrice', axis=1, inplace=True)
@@ -31,11 +31,12 @@ def drop_feats(df_merged):
     # Drop features that do not provide new info
     to_drop = []
     for col in df_merged.columns:
+        # If one value is more than 95% of the data, it is not useful
         most_occuring = df_merged[col].value_counts().iloc[0]
         if most_occuring/len(df_merged) > 0.95:
             to_drop.append(col)
-    to_drop.append('GarageCars')
-    to_drop.append('GarageYrBlt') # from correlation analysis
+    to_drop.append('GarageCars') # from correlation heatmap
+    to_drop.append('GarageYrBlt') # from correlation heatmap
     df_merged.drop(to_drop, axis=1, inplace=True)
 
     return df_merged
